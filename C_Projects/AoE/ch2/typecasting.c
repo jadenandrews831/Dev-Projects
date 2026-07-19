@@ -1,0 +1,15 @@
+#include <stdio.h>
+
+int main(){
+	int a, b;
+	float c, d;
+
+	a = 5;
+	b = 10;
+
+	c = a/b;
+	d = (float)a / (float)b;
+	printf("[integers]\t a = %d\t b = %d\n", a, b);
+	printf("[floats]\t c = %f\t d = %f\n", c, d);
+	return 0;
+}
