@@ -1,0 +1,78 @@
+INET_NTOP(3)              Linux Programmer's Manual              INET_NTOP(3)
+
+NNAAMMEE
+       inet_ntop - convert IPv4 and IPv6 addresses from binary to text form
+
+SSYYNNOOPPSSIISS
+       ##iinncclluuddee <<aarrppaa//iinneett..hh>>
+
+       ccoonnsstt cchhaarr **iinneett__nnttoopp((iinntt _a_f,, ccoonnsstt vvooiidd **_s_r_c,,
+                             cchhaarr **_d_s_t,, ssoocckklleenn__tt _s_i_z_e));;
+
+DDEESSCCRRIIPPTTIIOONN
+       This function converts the network address structure _s_r_c in the _a_f ad‐
+       dress family into a character string.  The resulting string is  copied
+       to  the  buffer  pointed  to by _d_s_t, which must be a non-null pointer.
+       The caller specifies the number of bytes available in this  buffer  in
+       the argument _s_i_z_e.
+
+       iinneett__nnttoopp()  extends the iinneett__nnttooaa(3) function to support multiple ad‐
+       dress families, iinneett__nnttooaa(3) is now considered to be deprecated in fa‐
+       vor of iinneett__nnttoopp().  The following address families are currently sup‐
+       ported:
+
+       AAFF__IINNEETT
+              _s_r_c points to a _s_t_r_u_c_t _i_n___a_d_d_r (in network byte order) which is
+              converted to an IPv4 network address in the dotted-decimal for‐
+              mat, "_d_d_d_._d_d_d_._d_d_d_._d_d_d".   The  buffer  _d_s_t  must  be  at  least
+              IINNEETT__AADDDDRRSSTTRRLLEENN bytes long.
+
+       AAFF__IINNEETT66
+              _s_r_c  points  to a _s_t_r_u_c_t _i_n_6___a_d_d_r (in network byte order) which
+              is converted to a representation of this address  in  the  most
+              appropriate  IPv6 network address format for this address.  The
+              buffer _d_s_t must be at least IINNEETT66__AADDDDRRSSTTRRLLEENN bytes long.
+
+RREETTUURRNN VVAALLUUEE
+       On success, iinneett__nnttoopp() returns a non-null pointer to  _d_s_t.   NULL  is
+       returned if there was an error, with _e_r_r_n_o set to indicate the error.
+
+EERRRROORRSS
+       EEAAFFNNOOSSUUPPPPOORRTT
+              _a_f was not a valid address family.
+
+       EENNOOSSPPCC The  converted  address  string  would exceed the size given by
+              _s_i_z_e.
+
+AATTTTRRIIBBUUTTEESS
+       For an explanation  of  the  terms  used  in  this  section,  see  aatt‐‐
+       ttrriibbuutteess(7).
+
+       ┌────────────┬───────────────┬────────────────┐
+       │IInntteerrffaaccee   │ AAttttrriibbuuttee     │ VVaalluuee          │
+       ├────────────┼───────────────┼────────────────┤
+       │iinneett__nnttoopp() │ Thread safety │ MT-Safe locale │
+       └────────────┴───────────────┴────────────────┘
+
+CCOONNFFOORRMMIINNGG TTOO
+       POSIX.1-2001,  POSIX.1-2008.   Note  that RFC 2553 defines a prototype
+       where the last argument _s_i_z_e is of type _s_i_z_e___t.  Many  systems  follow
+       RFC 2553.   Glibc  2.0  and  2.1  have  _s_i_z_e___t, but 2.2 and later have
+       _s_o_c_k_l_e_n___t.
+
+BBUUGGSS
+       AAFF__IINNEETT66 converts IPv4-mapped IPv6 addresses into an IPv6 format.
+
+EEXXAAMMPPLLEESS
+       See iinneett__ppttoonn(3).
+
+SSEEEE AALLSSOO
+       ggeettnnaammeeiinnffoo(3), iinneett(3), iinneett__ppttoonn(3)
+
+CCOOLLOOPPHHOONN
+       This page is part of release 5.10 of the Linux _m_a_n_-_p_a_g_e_s  project.   A
+       description  of the project, information about reporting bugs, and the
+       latest    version    of    this    page,    can    be     found     at
+       https://www.kernel.org/doc/man-pages/.
+
+Linux                             2020-06-09                     INET_NTOP(3)
