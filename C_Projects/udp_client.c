@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/socket.h>
+#include <unistd.h>
 
 #include "networking.h"
 
@@ -17,7 +18,6 @@ int client_loop(int, int, char *, char *);
 
 int udp_client(char* host, char* port){
     int sock_fd, status = 0;
-    char garb = '\n';
     memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_DGRAM;

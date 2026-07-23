@@ -18,7 +18,7 @@ def handler_client(sock, addr):
 		try:
 			data = sock.recv(4096)
 			print(f"[MESSAGE FROM {addr}] >>> {data.decode()}")
-			sock.send(b"Hello, client from TCP")
+			sock.send(data)
 		except KeyboardInterrupt:
 			sock.send(b"Connection is Closing")
 			sock.close()

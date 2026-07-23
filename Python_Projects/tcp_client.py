@@ -6,7 +6,6 @@ def client(host, port):
 	try:
 		with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 			s.connect((host, port))	
-			s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 			while True:
 				s.send(input("TCPClient> ").encode())
 				resp = s.recv(4096)
