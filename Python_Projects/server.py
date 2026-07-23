@@ -22,6 +22,7 @@ def handler_client(sock, addr):
 			sock.send(b"Hello, client from TCP")
 		except KeyboardInterrupt:
 			sock.send(b"Connection is Closing")
+			sock.close()
 			break
 
 def tcp_server():
