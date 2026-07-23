@@ -79,7 +79,9 @@ int udp_server(){
 			}
 			strcpy(buffer, "Hello, Client\n\0");
 			if(sendto(sock_fd, buffer, BUFFERSIZE, 0, (struct sockaddr *)&sender_addr, sizeof(sender_addr))){
-
+				printf("[SERVER DEBUG] >>> Message successfully sent to >>>%p<<<\n\n", &s->sin_addr);
+			} else {
+				printf("[SERVER ERROR] >>>in udp_server()<<< while sending data back to client >>>%s:%d<<<", client_ip, client_port);
 			}
 		}
 	} else {
