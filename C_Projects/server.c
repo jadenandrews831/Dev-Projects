@@ -8,9 +8,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-#define TYPESIZE 4
-#define IPSIZE 17
-#define BUFFERSIZE 4096
+#include "networking.h"
 
 void lowercase_str(char* str){
 	for(int i=0; str[i] != '\0'; i++)
@@ -60,15 +58,16 @@ int udp_server(){
 			printf("[SERVER DEBUG] >>> Successfully allocated %d bytes for the buffer at %p!\n", BUFFERSIZE, buffer);
 		} else {
 			printf("[SERVER ERROR] >>>in udp_server()<< while allocating buffer.\nError %s\n", strerror((int)errno));
+			close(sock_fd);
 			return -1;
 		}
 		while(1){
-			int sl = sizeof(sender_len);
-			s_len = (unsigned int *)&sl;
+			s_len = (unsigned int *)&sender_len;
 			if(recvfrom(sock_fd, buffer, BUFFERSIZE, 0, (struct sockaddr *)&sender_addr, s_len) != -1){
 				printf("[SERVER DEBUG] >>> Successfully received data!\nData >>> %s\n", (char *)buffer);
 			} else {
 				printf("[SERVER ERROR] >>>in udp_server()<<< while receiving data\nBuffer: %p\nBufferSize: %d\nError: %s", buffer, BUFFERSIZE, strerror((int)errno));
+				close(sock_fd);
 				return -1;
 			}
 			if(sender_addr.ss_family == AF_INET){
@@ -77,8 +76,8 @@ int udp_server(){
 				client_port = ntohs(s->sin_port);
 				printf("[SERVER DEBUG] >>> Client Host: %s\tClient Port: %u\n", client_ip, client_port);
 			}
-			strcpy(buffer, "Hello, Client\n\0");
-			if(sendto(sock_fd, buffer, BUFFERSIZE, 0, (struct sockaddr *)&sender_addr, sizeof(sender_addr))){
+			strcpy(buffer, (char *)buffer);
+			if(sendto(sock_fd, buffer, BUFFERSIZE, 0, (struct sockaddr *)&sender_addr, (unsigned int)(*s_len)) >= 0){
 				printf("[SERVER DEBUG] >>> Message successfully sent to >>>%p<<<\n\n", &s->sin_addr);
 			} else {
 				printf("[SERVER ERROR] >>>in udp_server()<<< while sending data back to client >>>%s:%d<<<", client_ip, client_port);
@@ -86,6 +85,7 @@ int udp_server(){
 		}
 	} else {
 		printf("[SERVER ERROR] >>>in udp_server()<<< while binding socket to host\nError Message: %s\n", strerror((int)errno));
+		close(sock_fd);
 		return -1;
 	}
 	return 0;

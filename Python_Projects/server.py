@@ -6,12 +6,11 @@ import threading
 def udp_server():
 	bport = int(input("Bind Port: "))
 	with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
-		sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 		sock.bind(("0.0.0.0", bport))
 		while True:
 			data, addr = sock.recvfrom(4096)
 			print(f"[Message from {addr}] >>> {data.decode()}")
-			sock.sendto(b"Hello, client", addr)
+			sock.sendto(data, addr)
 	
 
 def handler_client(sock, addr):
