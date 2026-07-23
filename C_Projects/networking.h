@@ -1,7 +1,9 @@
 #include <errno.h>
 #include <string.h>
+#include <ctype.h>
 
 #define TYPESIZE 4
+#define HOSTSIZE 100
 #define IPSIZE 17
 #define BUFFERSIZE 4096
 

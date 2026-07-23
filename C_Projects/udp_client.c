@@ -58,7 +58,7 @@ int client_loop(int sock_fd, int status, char *host, char *port){
 }
 
 int main(){
-    char host[17];
+    char host[IPSIZE];
     unsigned int port;
     char *port_str;
 
