@@ -1,6 +1,7 @@
 #include <arpa/inet.h>
 #include <ctype.h>
 #include <errno.h>
+#include <netdb.h>
 #include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,6 +10,36 @@
 #include <unistd.h>
 
 #include "networking.h"
+
+int tcp_server(){
+	int sock_fd;
+	char host[IPSIZE];
+	unsigned int port;
+
+	struct sockaddr_in sock;
+
+	struct addrinfo hints;
+	struct addrinfo *res;
+	memset(&hints, 0, sizeof(hints));
+	hints.ai_family = AF_INET;
+	hints.ai_socktype = SOCK_STREAM;
+
+	int c;
+	while((c = getchar()) != '\n' && c != EOF);
+	printf("Remote Host: ");
+	if(fgets(host, IPSIZE, stdin) == NULL)
+		fatal(">>>in tcp_server()<<< while getting remote host address from stdin", errno);
+	printf("[SERVER DEBUG] >>> Successfully obtained remote host address\n\tHOST: %s\n", host);
+
+	printf("Remote Port: ");
+	if(scanf("%u", &port) == EOF)
+		fatal(">>>in tcp_server()<<< while getting remote port from stdin", errno);
+	printf("[SERVER DEBUG] >>> Successfully obtained remote port\n\tPORT: %u\n", port);
+
+
+	// if(getaddrinfo())
+	return 0;
+}
 
 int udp_server(){
 	int sock_fd;
@@ -89,6 +120,8 @@ int udp_server(){
 int choose_type(char* s_type){
 	if(strcmp(s_type, "tcp") == 0){
 		printf("[SERVER DEBUG] >>> s_type: %s\n", s_type);
+		if(tcp_server() != -1)
+			printf("[SERVER DEBUG] >>>in choose_type()<<< tcp_server() call successful!\n");
 		return 1;
 	}
 	else if (strcmp(s_type, "udp") == 0){
