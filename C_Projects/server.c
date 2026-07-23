@@ -10,11 +10,6 @@
 
 #include "networking.h"
 
-void lowercase_str(char* str){
-	for(int i=0; str[i] != '\0'; i++)
-		str[i] = (unsigned char)tolower(str[i]);
-}
-
 int udp_server(){
 	int sock_fd;
 	char host[IPSIZE];

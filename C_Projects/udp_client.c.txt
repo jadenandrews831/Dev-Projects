@@ -10,7 +10,7 @@
 
 struct sockaddr_in sock;
 unsigned int sock_len = sizeof(sock);
-struct addrinfo hints;
+struct addrinfo hints, *res;
 void *buffer;
 
 int client_loop(int, int, char *, char *);
@@ -25,36 +25,31 @@ int udp_client(char* host, char* port){
 }
 
 int client_loop(int sock_fd, int status, char *host, char *port){
-    struct addrinfo *res;
-    unsigned int b_len;
     if((status = getaddrinfo(host, port, &hints, &res)) != 0)
         fatal(">>>in udp_client()<<< while adding address to sockadd_in structure", errno);
-    // printf("[CLIENT DEBUG] >>> Successfully added address to sockadd_in structure\n");
+    printf("[CLIENT DEBUG] >>> Successfully added address to sockadd_in structure\n");
     memcpy(&sock, res->ai_addr, res->ai_addrlen);
     freeaddrinfo(res);
 
     if((sock_fd = socket(PF_INET, SOCK_DGRAM, 0)) == -1)
         fatal(">>>in udp_client()<<< while creating client socket file descriptor", errno);
 
-    // printf("[CLIENT DEBUG] >>> Successfully created socket file descriptor!\n");
+    printf("[CLIENT DEBUG] >>> Successfully created socket file descriptor!\n");
 
     buffer = malloc(BUFFERSIZE);
-    printf("UDPClientC> ");
+    printf("C_UDPClient> ");
     if(fgets((char *)buffer, BUFFERSIZE, stdin) == NULL)
         fatal(">>in udp_client()<< while getting user data from stdin", errno);
 
-    b_len = strlen(buffer);
-    if(sendto(sock_fd, buffer, b_len, 0, (struct sockaddr*)&sock, sock_len) == -1)
+    if(sendto(sock_fd, buffer, BUFFERSIZE, 0, (struct sockaddr*)&sock, sock_len) == -1)
         fatal(">>>in udp_client()<<< while sending data to udp server", errno);
 
-    if(recvfrom(sock_fd, buffer, b_len, 0, (struct sockaddr *)&sock, &sock_len) == -1)
+    memset(buffer, 0, BUFFERSIZE);
+    
+    if(recvfrom(sock_fd, buffer, BUFFERSIZE, 0, (struct sockaddr *)&sock, &sock_len) == -1)
         fatal(">>>in udp_client()<<< while receiving data from udp server", errno);
-    // printf("[CLIENT DEBUG] >>> Successfully obtained data from udp server!\n");
+    printf("[CLIENT DEBUG] >>> Successfully obtained data from udp server!\n");
     printf("[MESSAGE FROM SERVER] >>> %s\n", (char *)buffer);
-
-    close(sock_fd);
-    free(buffer);
-    return 0;
 }
 
 int main(){
