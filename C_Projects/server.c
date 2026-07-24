@@ -3,6 +3,7 @@
 #include <errno.h>
 #include <netdb.h>
 #include <netinet/in.h>
+#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -13,8 +14,10 @@
 
 int tcp_server(){
 	int sock_fd;
+	int status;
 	char host[IPSIZE];
 	unsigned int port;
+	char PORT_STR[7];
 
 	struct sockaddr_in sock;
 
@@ -30,14 +33,18 @@ int tcp_server(){
 	if(fgets(host, IPSIZE, stdin) == NULL)
 		fatal(">>>in tcp_server()<<< while getting remote host address from stdin", errno);
 	printf("[SERVER DEBUG] >>> Successfully obtained remote host address\n\tHOST: %s\n", host);
+	host[strcspn(host, "\n")] = '\0';
 
 	printf("Remote Port: ");
 	if(scanf("%u", &port) == EOF)
 		fatal(">>>in tcp_server()<<< while getting remote port from stdin", errno);
 	printf("[SERVER DEBUG] >>> Successfully obtained remote port\n\tPORT: %u\n", port);
+	snprintf(PORT_STR, sizeof(PORT_STR), "%u", port);
+	printf("[SERVER DEBUG] >>> PORT: %u\tPORT_STR: %s\n", port, PORT_STR);
 
-
-	// if(getaddrinfo())
+	if((status = getaddrinfo(host, PORT_STR, &hints, &res)) != 0)
+		fatal((char *)gai_strerror(status), errno);
+	printf("[SERVER DEBUG] >>> Successfully allocated address info\n");
 	return 0;
 }
 

@@ -1,7 +1,17 @@
 import argparse
 import socket
 import threading
+import getpass
 
+def authenticate(username=None, password=None):
+	if username == None:
+		username = input("Username> ")
+	if password == None:
+		password = getpass.getpass("Password> ")
+
+	with open(".svrauth") as auth:
+		for line in auth:
+			print(line)
 
 def udp_server():
 	bport = int(input("Bind Port: "))
@@ -17,6 +27,7 @@ def handler_client(sock, addr):
 	while True:
 		try:
 			data = sock.recv(4096)
+			authenticate()
 			print(f"[MESSAGE FROM {addr}] >>> {data.decode()}")
 			sock.send(data)
 		except KeyboardInterrupt:
@@ -42,9 +53,6 @@ def main():
 		server_type = input("Please type \"UDP\" or \"TCP\": ")
 	if server_type == 'udp': udp_server()
 	else: tcp_server()
-		
-	
-
 
 if __name__ == "__main__":
 	main()
